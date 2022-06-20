@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html><head>
+  
+	<base target="_top">
+	<!--INCLUDE REQUIRED EXTERNAL JAVASCRIPT AND CSS LIBRARIES-->
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+  <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+	<link rel="stylesheet" type="text/css"
+		href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/fontawesome.min.css" integrity="sha512-xX2rYBFJSj86W54Fyv1de80DWBq7zYLn2z0I9bIhQG+rxIF6XVJUpdGnsNHWRa6AvP89vtFupEPDP8eZAtu9qA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   
+  <style>
+
+  #table-TimXe   td {
+   font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1200 - 300)));
+  vertical-align: middle;
+  text-align: left  ;
+   border: 1px solid black;
+  border-bottom: 1px solid blue;
+  margin: auto;
+}
+ .vis-today{
+ background-color:  #363945;
+ border-color: red;
+ color: white;
+}
+
+    .vis-item.green {
+  background-color: greenyellow;
+  border-color: green;
+}
+  .vis-item.orange {
+  background-color: gold;
+  border-color: orange;
+}
+    .DangSuaChua{
+   color: #00ff00;
+}  
+   .DungCongViec{
+    color: #ff4d4d;
+   }
+   DangTiepNhan{
+    color: #00bfff;
+   }
+   ChuanBiTiep{
+    color: #bf00ff;
+   }
+   .special {
+  font-weight: bold !important;
+  color: #fff !important;
+  background: #bc0000 !important;
+  text-transform: uppercase;
+}
+
+    .note1{  color: red;}
+    .note2{  color: #bf00ff;}
+
+  #tablehen td {
+    font-size: 25px;
+  }
+  #tablehen td:nth-child(1) {
+        width: 3%;
+        font-size: 9px;
+    } 
+   
+    .items-panel {
+        display: flex;
+        justify-content: space-around;
+        
+    }
+
+    .vis-labelset .vis-label {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: white;
+    box-sizing: border-box;
+}
+    .vis-timeline {
+      border: 2px solid black;
+      font-family:  purisa, 'comic sans', cursive;
+      font-size: 10pt;
+      font-color :white;
+      background-color:  #363945;
+      font-weight: bold;
+      color :white;
+    }
+    .vis-item {
+      border-color: #F991A3;
+      font-family: Arial, sans-serif;
+      background-color: pink;
+      font-size: 10pt;
+      box-shadow: 5px 5px 20px rgba(128,128,128, 0.5);
+    }
+.vis-item.green.vis-selected  {
+          background-color: #9e9b78;
+          border-color: #9d9b95;
+          z-index: 2;
+          }
+.vis-item.orange.vis-selected  {
+          background-color: #9e9b78;
+          border-color: #9d9b95;
+          z-index: 2;
+          }
+   
+ .vis-selected  {
+  background-color: red;
+  border-color: green;
+  font-weight: bold;
+   color: white;
+}
+    .vis-item.green {
+  background-color: greenyellow;
+  border-color: green;
+  font-weight: bold;
+   color: black;
+}
+.vis-item.red {
+background-color: red;
+  border-color: darkred;
+  color: white;
+  }
+.vis-item.magenta {
+  background-color: magenta;
+  border-color: purple;
+  color: white;
+}
+
+  .vis-item.orange {
+  background-color: #ffd966;
+  border-color: orange;
+  color: black;
+  font-weight: bold;
+}
+input:invalid {
+  border-color: red;
+}
+input:valid {
+  background: lightgreen;
+}
+select:valid {
+  background: lightgreen;
+}
+  select:invalid {
+  border-color: red;
+}
+textarea:valid {
+  background: lightgreen;
+}
+  textarea:invalid {
+  border-color: red;
+}
+.DaGiao {
+  float: left;
+  width: 30px;
+  height: 30px;
+  margin: 1px;
+  border: 3px solid #73AD21;
+}  
+  .vis-time-axis .vis-text {
+    position: absolute;
+    color: white;
+    padding: 3px;
+    overflow: hidden;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+  </style>
+	<!--INCLUDE JavaScript.html FILE-->
+</head>
+<input id="Email" disabled style="display:none">
+<body style="background-color:black; width: 100%;">
+  <h2  style="font-weight:bold;text-align:center;color:white;" id = "tieude">Thông Tin Xe Hen</h2>
+  <h5 style="font-weight:bold;text-align:center;color:white;" id = "ThongTinBaoCao"></h5>
+   <div class="card pmd-card" style="background-color:black; border: none;">   
+      <div class="pmd-tabs" style="background-color:black; width: 100%;color:white">
+          <ul class="nav nav-tabs" role="tablist"><input id="Dagiao" type="checkbox" onchange="XeDaGiao()"  class="DaGiao" disabled>
+            <li class="nav-item"><a class="nav-link " href="#tiepnhan" aria-controls="home" role="tab" ondblclick=" redraw()" data-toggle="tab">Tiáº¿p Nháº­n</a></li>
+              <li class="nav-item"><a class="nav-link " href="#TienDo" aria-controls="home" role="tab" ondblclick=" redraw()" data-toggle="tab">Lá»‹ch Cá»‘ Váº¥n</a></li>
+              <li class="nav-item"><a class="nav-link active" href="#Timeline" aria-controls="about" role="tab" data-toggle="tab" ondblclick="redraw()">Äáº·t Háº¹n</a></li>
+              <li class="nav-item"> <a class="nav-link" href="https://script.google.com/a/macros/toyotavungtau.com/s/AKfycbySwWlMPQB79qIsjduRA2qgsIOaJ72UEl9iyM3Qi8Ffm8CM_edkUWYDWsVtq6PXiqyK/exec" title="link_title">Tiáº¿p Nháº­n CV</a></li>
+              <li class="nav-item"><input type="date" onchange="ngaydathen()" id="ngaydathenval" class="form-control"></li>
+          </ul>
+      </div>
+     <div class="tab-content">
+       <div role="tabpanel" class="tab-pane " id="tiepnhan">
+               <div  id="mytimelinetn"></div>
+       </div> 
+       <div role="tabpanel" class="tab-pane " id="TienDo">
+               <div  id="mytimelinecv"></div>
+       </div> 
+        <div role="tabpanel" class="tab-pane active" id="Timeline">
+          <div>
+           <div  id="mytimeline"></div></div>
+           <div> <div  id="mytimeline2"></div></div>
+           <div> <div  id="mytimeline3"></div></div>
+           <div> <div  id="mytimeline4"></div></div>
+           <div> <div  id="mytimeline5"></div></div>
+           <div> <div  id="mytimeline6"></div></div>
+        </div> 
+     </div>
+   </div>
+   <div class="modal fade" id="ModalSCC" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" >ÄÄƒng KÃ½ Äáº·t Háº¹n</h5><h5 style="float: right" id="biensoscc"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="FormSCC" autocomplete="off">
+          <div id="mesenge"><div class="alert alert-success">WellCome!!</div></div>
+          
+          <div class="form-row">
+              <div class="form-group col-6" style="display:none">
+                <label for="MaSo">MÃ£ Sá»‘</label>
+                <input required class="form-control"  id="MaSo"   name="MaSo" disabled>
+              </div> 
+              
+              <div class="form-group col-6">
+                <label for="KhoangSuaChua">Biá»ƒn Sá»‘ Xe</label>
+                <input required class="form-control"  id="BienSoXe"  name="BienSoXe" onchange="changvalueBS()" onkeyup="this.value = suabienso(this.value)">
+              </div>
+               <div class="form-group col-6">
+                <label for="KhoangSuaChua">Cá»‘ Váº¥n</label>
+                <select required class="form-control"  id="CoVanDichVu" onchange=" CoVanDuocDatHen(this.value)" >
+                    '<option ></option>'
+                </select> 
+              </div> 
+          </div> 
+          <div class="form-row">
+              
+              <div class="form-group col-6">
+                <label for="TrangThai">Tráº¡ng ThÃ¡i</label>
+                <input required class="form-control"  id="TrangThaiXuong" disabled name="TrangThaiXuong">
+              </div> 
+              <div class="form-group col-6" style="display">
+                  <label for="GioBatDauSCC">NgÃ y Giá» Háº¹n</label>
+                  <input required type="text" class="form-control" id="ThoiGianHen" onchange="DanhSachCoVan2()" >
+                </div>
+          </div> 
+           <div class="form-row">
+              <div class="form-group col-6">
+                <label for="LoaiHinhSuaChua">Loáº¡i HÃ¬nh GJ</label>
+                <select required class="form-control"  id="LoaiHinhSuaChua" onchange = "checkloaihinhGJ()" >
+                    '<option value=""></option>'
+                    '<option value="EM">BDÆ°á»¡ng</option>'
+                    '<option value="SCC">Sá»­a chá»¯a chung</option>'
+                    '<option value="EM60">BD1K, 5K,10K,20K</option>'
+                    '<option value="FIR"> Khiáº¿u náº¡i Sá»¯a Chá»¯a Láº¡i </option>'
+                </select> 
+              </div> 
+              <div class="form-group col-6">
+                <label for="LoaiHinhDongSon">Loáº¡i HÃ¬nh Äá»“ng SÆ¡n</label>
+                <select required class="form-control"  id="LoaiHinhDongSon" onchange = "checkloaihinhDS()">
+                    '<option value=""></option>'
+                    '<option value="Äá»“ng SÆ¡n">Äá»“ng SÆ¡n</option>'
+                    '<option value="BÃ¡o GiÃ¡ BH">BG Báº£o Hiá»ƒm</option>'
+                </select> 
+              </div> 
+           </div>
+           <div class="form-row">
+              <div class="form-group col-6" style="display">
+                  <label for="GioBatDauSCC">TÃªn KH </label>
+                  <input required type="text" class="form-control" id="TenKH"  >
+                </div>
+                <div class="form-group col-6" style="display">
+                  <label for="GioBatDauSCC">Sá»‘ Äiá»‡n Thoáº¡i</label>
+                  <input required  type="tel" class="form-control"  id="SoDT"  >
+                </div>
+
+           </div>
+           <div class="form-row">
+           <div class="form-group col-7" style="display:">
+                <label for="KhoangSuaChua">Email Háº¹n</label>
+                <input required class="form-control" type="email" id="NguoiDatHen"   >
+              </div>
+           
+           <div class="form-group col-5">
+                <label for="LoaiHinhDongSon">Tráº¡ng ThÃ¡i Háº¹n</label>
+                <select required class="form-control"  id="TrangThaiHen" onchange="XacNhanHen()">
+                    '<option value=""></option>'
+                    '<option value="XÃ¡c Nháº­n Háº¹n">XÃ¡c Nháº­n Háº¹n</option>'
+                    <option value="XÃ¡c Nháº­n 30P">XÃ¡c Nháº­n 30P</option>'
+                    '<option value="Há»§y Háº¹n">Há»§y Háº¹n</option>'
+                </select> 
+              </div>
+           </div>
+        <div class="form-row">
+              <div class="form-group col-12" style="display">
+                  <label for="GioBatDauSCC">Ná»™i Dung Háº¹n</label>
+                  <textarea required type="text" class="form-control" id="NoiDungHen"  >
+                  </textarea>
+                </div>
+           
+           
+              
+              <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group" id="buttonDK">
+                  
+                </div>
+                  <div class="btn-group" role="group" aria-label="Third group" id="buttonSCC">
+				  </div>
+           
+   
+    <div class="row modal-footer">
+      <div id="email">
+     
+      </div>
+      <div id="CuocGoi">
+        <a href="tel:0973502207" class="col-sm-7">Click Ä‘á»ƒ Gá»i</a>
+      </div>
+      <div id="NhanTin">
+      <a href="sms:0973502207?&amp;body=Ná»™i dung cong viev" class="col-sm-7">Click Ä‘á»ƒ Nháº¯n Tin</a>
+      </div>
+       
+    </div>
+			</div>
+			</div>
+			
+				  </form>
+		</div>
+        
+	  </div>
+	   </div>
+	</div>
+	</body> 			           
+        
+
+	<script>
+  var useCaher =JSON.parse(localStorage.getItem("data"))
+  var emailnhanvienhen = "quipham@toyotavungtau.com";
+  var container = document.getElementById('mytimeline');
+  var container2 = document.getElementById('mytimeline2');
+  var container3 = document.getElementById('mytimeline3');
+  var container4 = document.getElementById('mytimeline4');
+  var container5 = document.getElementById('mytimeline5');
+  var container6 = document.getElementById('mytimeline6');
+  var containercv = document.getElementById('mytimelinecv');
+  var containertn = document.getElementById('mytimelinetn');
+  var groups = new vis.DataSet();
+  var groupscv = new vis.DataSet();
+  var groupstn = new vis.DataSet();
+  var items = new vis.DataSet();
+  var newitems = new vis.DataSet();
+  var itemscv = new vis.DataSet();
+  var itemstn = new vis.DataSet();
+ 
+
+    groupstn.add({
+          id: "CÃ³ Háº¹n",
+          content: 'CÃ³ Háº¹n' 
+      })
+      groupstn.add({
+          id: "Tiáº¿p Nháº­n",
+          content: 'Tiáº¿p Nháº­n' 
+      }) 
+		
+    groups.add({
+          id: "EM",
+          content: 'EM' 
+      })
+      groups.add({
+          id: "SCC",
+          content: 'SCC' 
+      })
+      groups.add({
+          id: "Äá»“ng SÆ¡n",
+          content: 'Äá»“ng SÆ¡n' 
+      })
+       groups.add({
+          id: "BÃ¡o GiÃ¡ BH",
+          content: 'BÃ¡o GiÃ¡ BH' 
+      }) 
+	var NhomTD=["ToÃ n","TÃ i","RÃ´n","Lá»™c"]
+    for(i in NhomTD){
+         groupscv.add({
+            id: NhomTD[i],
+            content: NhomTD[i] 
+        })
+       
+
+    }    
+  
+  var option2={
+    clickToUse:true,
+    zoomable:false, 
+    start:(new Date(1000 * 60 * 60 * 24 + (new Date()).valueOf())).setHours(6),
+    end: (new Date(1000 * 60 * 60 * 24 + (new Date()).valueOf())).setHours(17),
+  }
+    var option3={
+    clickToUse:true,
+    zoomable:false, 
+    start:(new Date(1000 * 60 * 60 * 24*2 + (new Date()).valueOf())).setHours(6),
+    end: (new Date(1000 * 60 * 60 * 24*2 + (new Date()).valueOf())).setHours(17),
+  }
+    var option4={
+    clickToUse:true,
+    zoomable:false, 
+    start:(new Date(1000 * 60 * 60 * 24*3 + (new Date()).valueOf())).setHours(6),
+    end: (new Date(1000 * 60 * 60 * 24*3 + (new Date()).valueOf())).setHours(17),
+  }
+    var option5={
+    clickToUse:true,
+    zoomable:false, 
+    start:(new Date(1000 * 60 * 60 * 24*4 + (new Date()).valueOf())).setHours(6),
+    end: (new Date(1000 * 60 * 60 * 24*4 + (new Date()).valueOf())).setHours(17),
+  }
+    var option6={
+    clickToUse:true,
+    zoomable:false, 
+    start:(new Date(1000 * 60 * 60 * 24*5 + (new Date()).valueOf())).setHours(6),
+    end: (new Date(1000 * 60 * 60 * 24*5+ (new Date()).valueOf())).setHours(17),
+  }
+  
+  
+  var options = {         
+                  hiddenDates: [{ start: '2017-03-05 00:00:00',end: '2017-03-06 00:00:00',repeat: 'weekly'},
+                                { start: '2017-03-04 17:00:00',end: '2017-03-05 08:00:00',repeat: 'daily'},
+                                { start: '2017-03-04 12:00:00',end: '2017-03-04 13:00:00',repeat: 'daily'}], 
+                  editable: true,
+                  autoResize:false,
+                  //zoomable:false, 
+                  onAdd: function (item, callback) {
+                    $("#CoVanDichVu").html("")
+                    if(item.start.getMinutes()>=0&&item.start.getMinutes()<30){item.start.setMinutes(0)}else{item.start.setMinutes(30)}
+                    //if(item.group=="SCC"){item.start.setMinutes(0)}
+                    document.getElementById('FormSCC').reset()
+                    $('#ModalSCC').modal('show')
+                    document.getElementById('NguoiDatHen').disabled=true;
+                   
+                    $("#ThoiGianHen").val(TimesClick(item.start))
+                    DanhSachCoVan2()
+                    $("#buttonDK").html("<button  type='button' class='btn btn-primary me-2' onclick='DangKyHen()'>ÄÄƒng KÃ½!</button>")
+                  },
+                  onMove: function (item, callback) {
+                    let text = "Thay Äá»•i Giá» Hen "+item.id;
+                    if (confirm(text) == true) { ;
+                    if(item.start.getMinutes()>=0&&item.start.getMinutes()<30){item.start.setMinutes(0)}else{item.start.setMinutes(30)}
+                    if(item.group=="SCC"){item.start.setMinutes(0)}
+                    if((new Date().getTime()>item.start.getTime())){alert("Sai thá»i Gian");loadData();return false}
+                    CapNhatHenKeo(item.id,TimesClick(item.start))} else {loadData()}
+                  },
+                  onUpdate: function (item, callback) {
+                    $("#CoVanDichVu").html("")
+                    $('#ModalSCC').modal('show');
+                    document.getElementById('FormSCC').reset()
+                    document.getElementById('NguoiDatHen').disabled=false;
+                    if(email==emailnhanvienhen){document.getElementById('TrangThaiHen').disabled=false}
+                    $('#MaSo').val(item.id);
+                    changvalue()
+                     DanhSachCoVan(NhomTD)
+                      changvalue()
+                    if($('#Email').val()===$('#NguoiDatHen').val()||$('#Email').val()==emailnhanvienhen){
+                    if($("#TrangThaiXuong").val()=="00 CÃ³ Háº¹n"){
+                    $("#buttonDK").html("<button  type='button' class='btn btn-primary me-2' onclick='CapNhatHen()'>Cáº­p Nháº­t!</button>")}else{$("#buttonDK").html("")}
+                    $("#CuocGoi").html("<a href='tel:+84"+$('#SoDT').val()+"' class='col-sm-7'>Click Ä‘á»ƒ Gá»i</a>")
+                    }else{$("#buttonDK").html("")}
+                  },
+                  stack: true,
+                  verticalScroll: true,
+                  zoomKey: 'ctrlKey',
+                  format: {majorLabels: {
+                    millisecond:'HH:mm:ss',
+                    second:     'DD/MM/YYYY  HH:MM',
+                    minute:     'DD/MM/YYYY ',
+                    hour:       'DD/MM/YYYY ',
+                    weekday:    'DD/MM/YYYY ',
+                    day:        'DD MM YYYY',
+                    week:       'MM YY',
+                    month:      'YY',
+                    year:       ''
+                  }
+                  },
+                  margin: {
+                    item: 0,  // distance between items
+                    axis: 2 ,  // distance between items and the time axis
+                  },
+                  start:(new Date( (new Date()).valueOf())).setHours(6),
+                  end: (new Date( (new Date()).valueOf())).setHours(17),
+                  timeAxis: {scale: 'minute', step: 30},
+                  orientation: 'top',
+   };
+  var optionscv = {         
+                  hiddenDates: [{ start: '2017-03-05 00:00:00',end: '2017-03-06 00:00:00',repeat: 'weekly'},
+                                { start: '2017-03-04 18:00:00',end: '2017-03-05 07:30:00',repeat: 'daily'},
+                                { start: '2017-03-04 12:30:00',end: '2017-03-04 13:00:00',repeat: 'daily'}], 
+                  editable: false,
+                  autoResize:true,
+                  start:(new Date( (new Date()).valueOf())).setHours(6),
+                  end: (new Date( (new Date()).valueOf())).setHours(18),
+                  timeAxis: {scale: 'minute', step: 30},
+                  stack: true,
+                  format: {majorLabels: {
+
+                        millisecond:'HH:mm:ss',
+                        second:     'DD/MM/YYYY  HH:MM',
+                        minute:     'DD/MM/YYYY ',
+                        hour:       'DD/MM/YYYY ',
+                        weekday:    'DD/MM/YYYY ',
+                        day:        'DD MM YYYY',
+                        week:       'MM YY',
+                        month:      'YY',
+                        year:       ''
+                      }
+                  },
+                  
+                  margin: {
+                        item: 1,  // distance between items
+                        axis: 1   // distance between items and the time axis
+                  },
+                  orientation: 'top',
+   };
+  var timeline = new vis.Timeline(container, items,groups, options);
+  var timeline2 = new vis.Timeline(container2, items,groups, options);
+  var timeline3 = new vis.Timeline(container3, items,groups, options);
+  var timeline4 = new vis.Timeline(container4, items,groups, options);
+  var timeline5 = new vis.Timeline(container5, items,groups, options);
+  var timeline6 = new vis.Timeline(container6, items,groups, options);
+  var timelinecv = new vis.Timeline(containercv, itemscv,groupscv, optionscv);
+  var timelinetn = new vis.Timeline(containertn, itemstn,groupstn, optionscv);
+  timeline2.setOptions(option2);
+  timeline3.setOptions(option3)
+  timeline4.setOptions(option4)
+  timeline5.setOptions(option5)
+  timeline6.setOptions(option6)
+      getDATA()
+
+   
+  function getDATA(){
+	fetch("http://localhost:3000/Object")
+  .then(response => response.json())
+  .then(data => {;
+	   localStorage.setItem("data", JSON.stringify(data));
+				 console.log(JSON.parse(localStorage.getItem("data")))
+       useCaher = data ;
+	   loadData()}
+	   );
+}
+function ngaydathen(){
+var datehen = document.getElementById('ngaydathenval').value
+console.log(datehen)
+let optionngay={
+    //clickToUse:true,
+     verticalScroll: true,
+    zoomable:false, 
+    start:new Date(datehen).setHours(6),
+    end: new Date(datehen).setHours(17),
+  }
+  timeline.setOptions(optionngay);
+}
+  function getDATA2(data){
+      localStorage.setItem("data", data);
+      useCaher = JSON.parse(localStorage.getItem("data")); 
+     
+      $("#tieude").html("THÃ”NG TIN Äáº¶T Háº¸N "+Doingay(new Date()))
+      loadData()
+      
+  }
+  function XeDaGiao(){
+       useCaher = JSON.parse(localStorage.getItem("data")); 
+      if(document.getElementById('Dagiao').checked==true){
+      useCaher.Object = useCaher.Object.concat(useCaher2)}else{ useCaher = JSON.parse(localStorage.getItem("data")); }
+      $("#tieude").html("THÃ”NG TIN Äáº¶T Háº¸N "+Doingay(new Date()))
+      loadData()
+      getDATA()
+  }
+
+  function BaoCao(value){
+    var TT= "GLT : "+value[0][0]+"-TN: "+value[1][0]+"-Háº¸N : "+value[2][0]+ "-ÄS: "+value[3][0]+"-EM : "+value[4][0]+"-SCC : "+value[5][0]+"-BGBH : "+value[6][0]
+     $("#ThongTinBaoCao").html(TT)
+
+  }
+ 
+  function DanhSachCoVan2() { 
+   var values = JSON.parse(localStorage.getItem("GroupTDCV"));
+    var list = document.getElementById('CoVanDichVu'); 
+    $("#CoVanDichVu").html("")
+    var option = document.createElement("option");
+     option.value = "";
+      option.text = "";
+      list.appendChild(option)
+    for (var i = 0; i < values.length; i++) {
+      var khongduoc=" ðŸ†—"
+     
+     if(CoVanDuocDatHen(values[i])=="ok") {
+      var option = document.createElement("option");
+      option.value = values[i];
+      option.text = values[i]+khongduoc;
+      list.appendChild(option);
+    }
+    }
+  }
+  function DanhSachCoVan(values) { 
+    $("#CoVanDichVu").html("")
+     var list = document.getElementById('CoVanDichVu'); 
+     var option = document.createElement("option");
+      option.value = "";
+      option.text = "";
+      list.appendChild(option)
+    localStorage.setItem("GroupTDCV", JSON.stringify(values));	
+    var list = document.getElementById('CoVanDichVu');   
+     for (var i = 0; i < values.length; i++) {
+      var khongduoc=" ðŸ†—"
+      if(CoVanDuocDatHen(values[i])=="NotOK") {khongduoc=' â›”'}
+      var option = document.createElement("option");
+      option.value = values[i];
+      option.text = values[i]+khongduoc;
+      list.appendChild(option);
+    
+    }
+   
+  }
+
+
+  function setmail(email){
+   $("#Email").val(email)
+   if(email!=emailnhanvienhen){document.getElementById('TrangThaiHen').disabled=true}
+  }
+  function CoVanDuocDatHen(tencovan){
+      var ojb =  useCaher.Object 
+      var b="ok"
+      ojb = ojb.filter(function(r){return (r.CoVanDichVu===tencovan[0]&&r.TrangThaiXuong==="00 CÃ³ Háº¹n")})
+      var giodathen = new Date(DoiNgayDangKy($("#ThoiGianHen").val())) 
+       
+	for(var a in ojb){
+    var start = new Date(ojb[a].ThoiGianHen)
+    if(giodathen.valueOf()==start.valueOf()){
+      b ="NotOK"; 
+      }
+  }return b
+  }
+
+ function Doingay(use){
+    var ThoiGian = "ChÆ°a XN"
+    if(use){
+    use=new Date(use)
+    var Thang =use.getMonth()+1
+    var Ngay = use.getDate()
+    var Nam = use.getFullYear()
+    var Gio = use.getHours()
+    var Phut = use.getMinutes()
+    if (Thang<10){Thang="0"+Thang}
+    if (Ngay<10){Ngay="0"+Ngay}
+    if (Gio<10){Gio="0"+Gio}
+    if (Phut<10){Phut="0"+Phut}
+    var ThoiGian = Ngay+"/"+Thang+" "+Gio+":"+Phut}
+    return ThoiGian
+ }
+ function ngayGiohen(ngayhen){
+   var Thang =ngayhen.slice(3,5)
+    var Ngay = ngayhen.slice(0,2)
+    var Nam = ngayhen.slice(6,10)
+    var Gio = ngayhen.slice(11,13)
+    var Phut = ngayhen.slice(14,16)
+    var NgayThang = Ngay+"/"+Thang+"/"+Nam
+     var use={}
+     use.ngaythang= NgayThang
+     use.giophut= Gio+":"+Phut+":00"
+    
+     return use ;
+ }
+function DoiNgayDangKy(ngayhen){
+    var Thang =ngayhen.slice(3,5)
+    var Ngay = ngayhen.slice(0,2)
+    var Nam = ngayhen.slice(6,10)
+    var Gio = ngayhen.slice(11,13)
+    var Phut = ngayhen.slice(14,16)
+    var ThoiGianMoi = Nam+"-"+Thang+"-"+Ngay+"T"+Gio+":"+Phut+":00Z"
+     var aa= new Date(ThoiGianMoi)
+     aa= new Date(aa-7*60*60*1000)
+     return aa ;
+    }
+  
+</script>
+
+<script>//script load du lieu cho timeline
+function redraw(){
+    timeline.redraw()
+    timelinecv.redraw()
+    timelinetn.redraw()
+}
+
+function checkloaihinhGJ(){
+  var LoaiHinhSCC=$('#LoaiHinhSuaChua').val()
+   var giodathen = new Date(DoiNgayDangKy($("#ThoiGianHen").val()))
+   
+  if(LoaiHinhSCC=="EM60"){LoaiHinhSCC="EM"}
+   if(LoaiHinhSCC=="FIR"){LoaiHinhSCC="SCC"}
+   if(LoaiHinhSCC=="SCC"){giodathen.setMinutes(0)}
+     var dataArray1 =  useCaher.Object;
+     var dataArrayhen = dataArray1.filter(function (r){
+       if(r.LoaiHinhSuaChua=="EM60"){r.LoaiHinhSuaChua="EM"}
+       if(r.LoaiHinhSuaChua=="FIR"){r.LoaiHinhSuaChua="SCC"}
+       return r.TrangThaiXuong=="00 CÃ³ Háº¹n"&&r.LoaiHinhSuaChua==LoaiHinhSCC&&(new Date(r.ThoiGianHen).valueOf()==giodathen.valueOf())})
+     var soluong = dataArrayhen.length
+     if(LoaiHinhSCC=="EM"&&soluong>=3){$('#LoaiHinhSuaChua').val(""); alert("QuÃ¡ Sá»‘ lÆ°á»£ng Ä‘áº·t háº¹n cho xe EM. Tá»‘i Ä‘a 3 xe") }
+      if(LoaiHinhSCC=="SCC"&&soluong>=2){$('#LoaiHinhSuaChua').val(""); alert("QuÃ¡ Sá»‘ lÆ°á»£ng Ä‘áº·t háº¹n cho xe SCC. Tá»‘i Ä‘a 2 xe") }
+  return soluong
+}
+function checkloaihinhDS(){
+  var LoaiHinhDS=$('#LoaiHinhDongSon').val()
+   var giodathen = new Date(DoiNgayDangKy($("#ThoiGianHen").val()))
+     var dataArray1 =  useCaher.Object;
+     var dataArrayhen = dataArray1.filter(function (r){
+       return r.TrangThaiXuong=="00 CÃ³ Háº¹n"&&r.LoaiHinhDongSon==LoaiHinhDS&&(new Date(r.ThoiGianHen).valueOf()==giodathen.valueOf())})
+     var soluongDS = dataArrayhen.length
+     if(soluongDS>=1){$('#LoaiHinhDongSon').val(""); alert("QuÃ¡ Sá»‘ lÆ°á»£ng Ä‘áº·t háº¹n cho xe "+LoaiHinhDS+ ". Tá»‘i Ä‘a 1 xe") }
+
+  return soluongDS
+}
+  function loadData () {//Load du lieu cho time line co
+    var dataArray1 =  useCaher;
+     items.clear();
+     itemstn.clear();
+     itemscv.clear();
+     var dataArrayhen = dataArray1.filter(function (r){return r.ThoiGianHen})
+     jQuery.each( dataArrayhen, function(dataArrayhen, r) {
+      datadathen(r)
+    })
+    timeline.redraw()
+    jQuery.each( dataArray1, function(dataArray1, r) {
+      datalichcovan(r)
+      datatiepnhan(r)
+    })
+    timelinecv.redraw()
+    console.log("Cáº­p Nháº­t")
+  }
+  function datadathen(r){
+        var start =new Date(r.ThoiGianHen)
+        var edit  = false;
+        var mau1 = "green";
+        var end = new Date(1000 * 60 * 29 + (new Date(start)).valueOf())
+        var TimeTreHen =((new Date()).getTime()-new Date(r.ThoiGianHen).getTime())/(60*1000)
+        if($("#Email").val()==emailnhanvienhen){edit  = true}else{edit  = false}
+        if(r.TrangThaiXuong=="00 CÃ³ Háº¹n"){edit  = true;mau1="orange"}
+        var PhanLoai = "[H] "+Doingay(r.TDXacNhanHen)
+        var Kytu = "â’½ ";
+        if(r.TrangThaiHen=="XÃ¡c Nháº­n Háº¹n"){Kytu="âœŒ"}
+        if(r.TrangThaiHen=="XÃ¡c Nháº­n 30P"){Kytu="ðŸ†—"}
+        if(r.TrangThaiHen=="Há»§y Háº¹n"){Kytu="â›”"}
+        if(r.LoaiHinhSuaChua=="FIR"){r.LoaiHinhSuaChua="SCC"}
+        if(r.LoaiHinhSuaChua=="EM60"){r.LoaiHinhSuaChua="EM"}
+        if(r.LoaiHinhSuaChua=="SCC"){end = new Date(1000 * 60 * 59 + (new Date(start)).valueOf())}
+        if(r.KhachHangHen=="Háº¹n VÃ£n Lai"&&r.TrangThaiXuong=="00 CÃ³ Háº¹n"){PhanLoai="[VL] "+Doingay(r.TDXacNhanHen)}
+        if(r.KhachHangHen=="Háº¹n VÃ£n Lai"&&r.TrangThaiXuong!="00 CÃ³ Háº¹n"){PhanLoai="[VL] "+r.TrangThaiHen}
+        if(r.KhachHangHen=="KhÃ¡ch Háº¹n"&&r.TrangThaiXuong!="00 CÃ³ Háº¹n"){PhanLoai="[H] "+r.TrangThaiHen}
+        if(TimeTreHen<10&&TimeTreHen>0&&(r.TrangThaiXuong=="00 CÃ³ Háº¹n"||r.TrangThaiXuong=="02 Chá» Tiáº¿p Nháº­n")){mau1="red"}
+        if(r.LoaiHinhDongSon){ 
+          items.add({
+                className: mau1,
+                editable: edit,
+                id:  r.MaSo,
+                group: r.LoaiHinhDongSon,
+                start: start,
+                end: new Date(1000 * 60 * 29 + (new Date(start)).valueOf()),
+                title:r.NoiDungHen+"<br>"+r.NguoiDatHen,
+                content: Kytu +r.BienSoXe +"<br>"+r.CoVanDichVu+"<br>"+PhanLoai
+                })
+        }else if(r.LoaiHinhSuaChua){
+        items.add({
+                className: mau1,
+                id: r.MaSo,
+                group: r.LoaiHinhSuaChua,
+                start: start,
+                editable: edit,
+                end: end,
+                title:r.NoiDungHen+"<br>"+r.NguoiDatHen,
+                content: Kytu +r.BienSoXe +"<br>"+r.CoVanDichVu+"<br>"+PhanLoai
+                });    
+              } 
+      
+     
+  }
+
+  function datalichcovan(r){
+     
+     var titeltrangthai = "",hen=""
+     if(r.KhachHangHen) {hen="[H] "}
+     if(r.LoaiHinhSuaChua){titeltrangthai= titeltrangthai+" " +r.LoaiHinhSuaChua }
+     if(r.LoaiHinhDongSon){titeltrangthai= titeltrangthai+" " +r.LoaiHinhDongSon }
+     if(r.NoiDungHen){titeltrangthai=titeltrangthai+ "<br>"+r.NoiDungHen }
+     if(r.ThoiGianHen&&r.BienSoXe){
+      itemscv.add({
+                id:  r.MaSo+"_Hen",
+                className: "green",
+                group: r.CoVanDichVu,
+                start: new Date(r.ThoiGianHen),
+                end: new Date(1000 * 60 * 29 + (new Date(r.ThoiGianHen)).valueOf()),
+                content: hen+r.BienSoXe ,
+                title:titeltrangthai,
+              });
+     }
+     if(r.TDHenGiaoXe){
+      itemscv.add({
+                id:  r.MaSo+"_Giao",
+                group: r.CoVanDichVu,
+                start: new Date(r.TDHenGiaoXe),
+                end: new Date(1000 * 60 * 29 + (new Date(r.TDHenGiaoXe)).valueOf()),
+                content: hen+r.BienSoXe ,
+                title:titeltrangthai,
+              });
+    } 
+    if(r.TDGapLeTan){
+      itemscv.add({
+                id:  r.MaSo+"_Tiep",
+                group: r.CoVanDichVu,
+                className: "orange",
+                start: new Date(r.TDGapLeTan),
+                end: new Date(1000 * 60 * 29 + (new Date(r.TDGapLeTan)).valueOf()),
+                content: hen+r.BienSoXe ,
+                title:titeltrangthai,
+              });
+    }
+  }
+  function datatiepnhan(r){
+   
+    var titeltrangthai = "";
+     if(r.LoaiHinhSuaChua){titeltrangthai= titeltrangthai+" " +r.LoaiHinhSuaChua }
+     if(r.LoaiHinhDongSon){titeltrangthai= titeltrangthai+" " +r.LoaiHinhDongSon }
+    var hen="";
+     if(r.KhachHangHen) {hen="[H] "}
+   if(r.ThoiGianHen&&r.TrangThaiXuong=="00 CÃ³ Háº¹n"){
+     itemstn.add({
+                id:  r.MaSo+"_CoHen",
+                className: "green",
+                group: "CÃ³ Háº¹n",
+                start: new Date(r.ThoiGianHen),
+                end: new Date(1000 * 60 * 29 + (new Date(r.ThoiGianHen)).valueOf()),
+                content: r.BienSoXe +" "+r.CoVanDichVu,
+               //title:titeltrangthai,
+              });
+   }
+   if(r.TDGapLeTan){
+     var end = new Date(1000 * 60 * 29 + (new Date(r.TDGapLeTan)).valueOf());
+     var giohientai = (new Date()).valueOf()
+     var classname =""
+     //if(r.TDKetThucTiepKhach&&r.TDBDTiepKhach==null){end= new Date( (new Date(r.TDKetThucTiepKhach).valueOf())-1000 * 60 * 29)}
+     
+      if(r.TDBDTiepKhach==null){end = new Date(1000 * 60 * 29 + (new Date(r.TDGapLeTan)).valueOf());}
+      if(r.TDBDTiepKhach==null&&r.TrangThaiXuong=="02 Chá» Tiáº¿p Nháº­n"&&giohientai>end.valueOf()){end = new Date();}
+      if(r.TDBDTiepKhach==null&&r.TrangThaiXuong=="02 Chuáº©n Bá»‹ Tiáº¿p"&&giohientai>end.valueOf()){end = new Date();}
+      if(r.TrangThaiXuong=="03 Äang Tiáº¿p Nháº­n"&&giohientai>end.valueOf()){end = new Date();}
+      if(r.TDKetThucTiepKhach){end = new Date(r.TDKetThucTiepKhach);classname="green"}
+      var titeltrangthai=""
+      if(r.ThoiGianHen){titeltrangthai =TimesClick(r.ThoiGianHen) }
+     itemstn.add({
+                id:  r.MaSo+"_TiepNhan",
+                className: classname,
+                group:"Tiáº¿p Nháº­n",
+               // subgroup:r.CoVanDichVu,
+                start: new Date(r.TDGapLeTan),
+                end: end,
+                content: hen+r.BienSoXe +"<br>"+r.CoVanDichVu+" "+titeltrangthai,
+                title:titeltrangthai,
+              });
+
+   }
+
+  }
+</script>
+<script>//funsion Ä‘Äƒng kÃ½
+
+function DangKyHen(){
+
+  if($('#BienSoXe').val()==""){alert("KhÃ´ng Thá»ƒ Äáº·t Háº¹n, Thiáº¿u ThÃ´ng Tin");return false}
+  if($('#TenKH').val()==""){alert("KhÃ´ng Thá»ƒ Äáº·t Háº¹n, Thiáº¿u ThÃ´ng Tin");return false}
+  if($('#NoiDungHen').val()==""){alert("KhÃ´ng Thá»ƒ Äáº·t Háº¹n, Thiáº¿u ThÃ´ng Tin");return false}
+  if($('#ThoiGianHen').val()==""){alert("KhÃ´ng Thá»ƒ Äáº·t Háº¹n, Thiáº¿u ThÃ´ng Tin");return false}
+  if($('#CoVanDichVu').val()==""){alert("KhÃ´ng Thá»ƒ Äáº·t Háº¹n, Thiáº¿u ThÃ´ng Tin");return false}
+ if($('#LoaiHinhDongSon').val()==""&&$('#LoaiHinhSuaChua').val()==""){alert("KhÃ´ng Thá»ƒ Äáº·t Háº¹n, Thiáº¿u ThÃ´ng Tin");return false}
+
+        var MaSohen = TaoMaSo($('#ThoiGianHen').val())+$('#BienSoXe').val()
+         MaSo:$('#MaSo').val(MaSohen)
+         var thoigiandung  = DoiNgayDangKy(document.getElementById("ThoiGianHen").value)
+         var khachhen = "KhÃ¡ch Háº¹n"
+
+         var giohientai = new Date()
+         var thoigiandathen = (thoigiandung.getTime()-giohientai.getTime())/(60*1000)
+         if(thoigiandathen<=30){alert("KhÃ´ng Thá»ƒ Äáº·t Háº¹n, Äáº·t háº¹n trÆ°á»›c 30p");return false}
+         if(thoigiandathen>30&&thoigiandathen<=120){ khachhen = "Háº¹n VÃ£n Lai"}
+         if($('#LoaiHinhSuaChua').val()=="SCC"){$('#ThoiGianHen').val(TimesClick(DoiNgayDangKy($('#ThoiGianHen').val()).setMinutes(0) ))}
+         var json2 = {
+                "jsondata": [
+                  {  MaSo:$('#MaSo').val(),
+                    ThongTin: {
+                      MaSo:$('#MaSo').val(),
+                      BienSoXe: $('#BienSoXe').val(),
+                      TenKH: $('#TenKH').val(),
+                      SoDT: $('#SoDT').val(),
+                      NoiDungHen: $('#NoiDungHen').val(),
+                      CoVanDichVu: $('#CoVanDichVu').val(),
+                      LoaiHinhDongSon: $('#LoaiHinhDongSon').val(),
+                      LoaiHinhSuaChua: $('#LoaiHinhSuaChua').val(),
+                      ThoiGianHen: $('#ThoiGianHen').val(),
+                      TDNgayHen: ngayGiohen($('#ThoiGianHen').val()).ngaythang,
+                      GioHen: ngayGiohen($('#ThoiGianHen').val()).giophut,
+                      KhachHangHen:khachhen,
+                      TrangThaiXuong: "00 CÃ³ Háº¹n",
+                      NguoiDatHen: $('#Email').val(),
+                      TDXacNhanHen:TimesClick()
+                    }
+                  }
+                ]
+              };
+$("#mesenge").html('<div class="alert alert-warning" role="alert">Äang ÄÄƒng KÃ½! '+khachhen+'</div>')
+  scriptWrite.writeData2(json2)
+}
+function HuyHen(){
+var MaSo = $('#MaSo').val()
+scriptWrite.HuyHen(MaSo)
+}
+
+function CapNhatHen(){
+        var MaSohen = TaoMaSo($('#ThoiGianHen').val())+$('#BienSoXe').val()
+         var json2 = {
+                "jsondata": [
+                  {  MaSo:$('#MaSo').val(),
+                    ThongTin: {
+                      MaSo:MaSohen,
+                      BienSoXe: $('#BienSoXe').val(),
+                      TenKH: $('#TenKH').val(),
+                      SoDT: $('#SoDT').val(),
+                      NoiDungHen: $('#NoiDungHen').val(),
+                      CoVanDichVu: $('#CoVanDichVu').val(),
+                      LoaiHinhDongSon: $('#LoaiHinhDongSon').val(),
+                      LoaiHinhSuaChua: $('#LoaiHinhSuaChua').val(),
+                      ThoiGianHen: $('#ThoiGianHen').val(),
+                      TDNgayHen: ngayGiohen($('#ThoiGianHen').val()).ngaythang,
+                      GioHen: ngayGiohen($('#ThoiGianHen').val()).giophut,
+                      KhachHangHen:"KhÃ¡ch Háº¹n",
+                      TrangThaiXuong: "00 CÃ³ Háº¹n",
+                      NguoiDatHen: $('#NguoiDatHen').val(),
+                      TDXacNhanHen:TimesClick()
+                    }
+                  }
+                ]
+              };
+$("#mesenge").html('<div class="alert alert-warning" role="alert">Äang Cáº­p Nháº­t!</div>')
+  scriptWrite.writeData2(json2)
+}
+function CapNhatHenKeo(MaSo,ThoiGianHenMoi){
+    var ojb =  useCaher
+		if(ojb[a].MaSo == MaSo){
+      if($('#Email').val()===ojb[a].NguoiDatHen||$('#Email').val()==emailnhanvienhen){
+         var json2 = {
+                "jsondata": [
+                  {  MaSo:ojb[a].MaSo,
+                    ThongTin: {
+                      ThoiGianHen: ThoiGianHenMoi,
+                      TDNgayHen: ngayGiohen(ThoiGianHenMoi).ngaythang,
+                      GioHen: ngayGiohen(ThoiGianHenMoi).giophut,
+                    }
+                  }
+                ]
+              };
+
+  scriptWrite.writeData2(json2)}else{alert("Báº¡n khÃ´ng thá»ƒ dá»i háº¹n, Báº¡n khÃ´ng Äáº·t háº¹n xe nÃ y");loadData()}
+}
+}
+
+function XacNhanHen(){
+  if($('#TrangThaiHen').val()=="Há»§y Háº¹n"){var MaSo = $('#MaSo').val()
+scriptWrite.HuyHen(MaSo)}else{
+   var json2 = {
+                "jsondata": [
+                  {  MaSo:$('#MaSo').val(),
+                    ThongTin: {
+                      TrangThaiHen: $('#TrangThaiHen').val(),
+                      TDXacNhanHen:TimesClick()
+                    }
+                  }
+                ]
+              };
+
+  scriptWrite.writeData2(json2)
+}
+}
+function TimesClick(data){
+  if(data){var  use=new Date(data);}else{var  use=new Date()}
+    var useinfo = {}
+    var Thang =use.getMonth()+1;
+    var Ngay = use.getDate();
+    var Nam = use.getFullYear();var Gio = use.getHours();
+    var Phut = use.getMinutes();
+    if (Thang<10){Thang="0"+Thang};
+    if (Ngay<10){Ngay="0"+Ngay};
+    if (Gio<10){Gio="0"+Gio};
+    if (Phut<10){Phut="0"+Phut}
+return Ngay+"/"+Thang+"/"+Nam+" "+Gio+":"+Phut+":00"
+}
+function changvalue(){
+	var ojb =  useCaher
+	for(var a in ojb){
+    $("#mesenge").html("<div class='alert alert-success'>Hello!!</div>")
+		if(ojb[a].MaSo == $("#MaSo").val()){
+      if(ojb[a].BienSoXe){	document.getElementById("BienSoXe").value = ojb[a].BienSoXe}
+      if(ojb[a].TrangThaiXuong){document.getElementById("TrangThaiXuong").value = ojb[a].TrangThaiXuong
+      if(ojb[a].CoVanDichVu){document.getElementById("CoVanDichVu").value = ojb[a].CoVanDichVu} 
+      if(ojb[a].LoaiHinhDongSon){document.getElementById("LoaiHinhDongSon").value = ojb[a].LoaiHinhDongSon} 
+      if(ojb[a].LoaiHinhSuaChua){document.getElementById("LoaiHinhSuaChua").value = ojb[a].LoaiHinhSuaChua} 
+      if(ojb[a].TenKH){document.getElementById("TenKH").value = ojb[a].TenKH} 
+      if(ojb[a].SoDT){document.getElementById("SoDT").value = ojb[a].SoDT} 
+      if(ojb[a].NoiDungHen){document.getElementById("NoiDungHen").value = ojb[a].NoiDungHen}
+      if(ojb[a].ThoiGianHen){document.getElementById("ThoiGianHen").value = TimesClick(ojb[a].ThoiGianHen)} 
+      if(ojb[a].NguoiDatHen){document.getElementById("NguoiDatHen").value = ojb[a].NguoiDatHen} 
+      if(ojb[a].TrangThaiHen){document.getElementById("TrangThaiHen").value = ojb[a].TrangThaiHen}
+      if(ojb[a].TrangThaiXuong=="00 CÃ³ Háº¹n"&&ojb[a].NguoiDatHen==$('#Email').val()){$("#buttonDK").html("<button  type='button' class='btn btn-primary me-2' onclick='CapNhatHen()'>Cáº­p Nháº­t!</button>")}else if(ojb[a].TrangThaiXuong=="00 CÃ³ Háº¹n"&& emailnhanvienhen==$('#Email').val()){$("#buttonDK").html("<button  type='button' class='btn btn-primary me-2' onclick='CapNhatHen()'>Cáº­p Nháº­t!</button>")}else{$("#buttonDK").html("")}
+      goithongtin()
+    } 
+	}
+}
+}
+function changvalueBS(){
+	var ojb =  useCaher
+	for(var a in ojb){
+    $("#mesenge").html("<div class='alert alert-success'>Hello!!</div>")
+    if(ojb[a].BienSoXe == $("#BienSoXe").val()&&ojb[a].TrangThaiXuong == "00 CÃ³ Háº¹n"){ alert("Xe ÄÃ£ CÃ³ Háº¹n");
+    $("#buttonDK").html("")
+    return false }
+
+}
+}
+
+function datevalue(value){
+var NgayHoanThanh=new Date(value)
+      NgayHoanThanh=new Date(NgayHoanThanh*1+7*60*60*1000)
+      var aa = NgayHoanThanh.toJSON()
+      var bb = aa.slice(0,aa.length -5)
+return bb
+}
+function TaoMaSo(ngayhen){
+ 
+     var Thang =ngayhen.slice(3,5)
+     var Ngay = ngayhen.slice(0,2)
+     var Nam = ngayhen.slice(6,10)
+     var MaSo = "TVT"+Nam+Thang+Ngay+"_"
+     return MaSo;
+    }
+function DoiNgayDangKy(ngayhen){
+    var Thang =ngayhen.slice(3,5)
+    var Ngay = ngayhen.slice(0,2)
+    var Nam = ngayhen.slice(6,10)
+    var Gio = ngayhen.slice(11,13)
+    var Phut = ngayhen.slice(14,16)
+     var ThoiGianMoi = Nam+"-"+Thang+"-"+Ngay+"T"+Gio+":"+Phut+":00Z"
+     var aa= new Date(ThoiGianMoi)
+     aa= new Date(aa-7*60*60*1000)
+     return aa ;
+    }   
+
+        $('#ThoiGianHen').datetimepicker({
+   format: 'dd/mm/yyyy HH:MM:00 ',
+            uiLibrary: 'bootstrap4',
+            modal: true,
+            footer: true,
+             datepicker: {
+                disableDates: function (date) {
+                    const currentDate = new Date().setHours(0, 0, 0, 0);
+                    return date.setHours(0, 0, 0, 0) >= currentDate ? true : false;
+                }}
+        });
+
+
+function suabienso(myValue) {
+    var myValue2 = myValue.toUpperCase()
+    myValue = myValue.replace(" ","")
+      myValue = myValue.replace("-","")
+       myValue = myValue.replace(".","")
+        if(myValue.length >5){
+        myValue = myValue.replace("[h] ","")
+        myValue = myValue.replace("[H] ","")
+        myValue = myValue.replace("[L] ","")
+        var ins = myValue.indexOf('-')
+      var BiensoLD =  myValue.slice(2,4).toUpperCase()
+      if(ins=="-1"&&BiensoLD=="LD"){myValue = myValue.slice(0,4)+"-"+myValue.slice(4,myValue.length)}
+      if(ins=="-1"&&BiensoLD!="LD"){myValue = myValue.slice(0,3)+"-"+myValue.slice(3,myValue.length)}
+        var myValue1 = myValue.replace(myValue.charAt(myValue.indexOf('.')),'');  
+        var soxe = myValue1.slice(myValue1.indexOf('-')+1,myValue1.length);
+        var aa = myValue1.slice(myValue1.length - 2,myValue1.length);
+        if (soxe.length == 5 ){
+        var aaaa= soxe.charAt(0)+soxe.charAt(1)+soxe.charAt(2)+soxe.charAt(3)+soxe.charAt(4)
+        var bbbb = soxe.charAt(0)+soxe.charAt(1)+soxe.charAt(2)+'.'+soxe.charAt(3)+soxe.charAt(4)
+        var myValue2 = myValue1.toString(6).replace(aaaa,bbbb).toUpperCase()
+        }else{var myValue2 = myValue1.toUpperCase()}   }
+        return myValue2;
+  }
+  function goithongtin(){
+     var dienthoai = "<a href='tel:+84"+$("#SoDT").val()+"' class='col-sm-7'>Click Ä‘á»ƒ Gá»i</a>"
+     var ThoiGianDen = DoiNgayDangKy($("#ThoiGianHen").val())
+         ThoiGianDen = new Date(ThoiGianDen-15*60*1000)
+     var sms = "<a href='sms:+84"+$("#SoDT").val()+"?&amp;body=Toyota VÅ©ng TÃ u xin xÃ¡c nháº­n cuá»™c háº¹n \n"+$("#BienSoXe").val()+" .Ná»™i Dung: "+$("#NoiDungHen").val()+". VÃ o LÃºc : "+Doingay2(ThoiGianDen)+".QuÃ½ KhÃ¡ch vui lÃ²ng Ä‘áº¿n ÄÃšNG GIá»œ Ä‘á»ƒ lÃ m thá»§ tá»¥c.Xin cáº£m Æ¡n!!' class='col-sm-7'>Click Ä‘á»ƒ Nháº¯n Tin</a>"
+     var EMail = '<a href="mailto:'+$("#NguoiDatHen").val()+'?&subject=ThÃ´ng bÃ¡o xÃ¡c nháº­n háº¹n '+$("#BienSoXe").val()+' &body=XÃ¡c Nháº­n háº¹n xe '+$("#BienSoXe").val()+' .Ná»™i Dung :'+ $("#NoiDungHen").val()+'  .VÃ o LÃºc:'+Doingay2(ThoiGianDen)+'.Thanks!!"> Emailr</a>'
+   $("#NhanTin").html(sms)
+   $("#CuocGoi").html(dienthoai)
+    $("#email").html(EMail)
+  }
+function Doingay2(use){
+  use=new Date(use)
+  var Thu = use.getDay()+1
+  var Thang =use.getMonth()+1
+  var Ngay = use.getDate()
+  var Nam = use.getFullYear()
+  var Gio = use.getHours()
+  var Phut = use.getMinutes()
+  if (Thang<10){Thang="0"+Thang}
+  if (Ngay<10){Ngay="0"+Ngay}
+  if (Gio<10){Gio="0"+Gio}
+  if (Phut<10){Phut="0"+Phut}
+  var ThoiGian = Gio+":"+Phut +" Thá»© "+Thu +" ngÃ y "+Ngay+"/"+Thang+" "
+  return ThoiGian
+}
+
+
+
+</script>  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+
+</html>
